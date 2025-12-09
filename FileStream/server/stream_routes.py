@@ -1,6 +1,8 @@
+import re
 import time
 import math
 import logging
+import secrets
 import mimetypes
 import traceback
 from aiohttp import web
@@ -9,11 +11,13 @@ from FileStream.bot import multi_clients, work_loads, FileStream
 from FileStream.config import Telegram, Server
 from FileStream.server.exceptions import FIleNotFound, InvalidHash
 from FileStream import utils, StartTime, __version__
+from ..utils.time_format import get_readable_time
+from ..utils.custom_dl import ByteStreamer
 from FileStream.utils.render_template import render_page
 
 routes = web.RouteTableDef()
 
-@routes.get("/status", allow_head=True)
+@routes.get("/", allow_head=True)
 async def root_route_handler(_):
     return web.json_response(
         {
